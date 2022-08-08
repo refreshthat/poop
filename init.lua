@@ -24,7 +24,7 @@ minetest.register_abm({
         for _, obj in pairs(minetest.get_objects_inside_radius(pos, 7)) do
             obj:punch(obj, 0.1, {damage_groups={fleshy=8}})
             if obj:is_player() then
-                local msg = "Oh no it looks like someone pooped and it is fresh. If you get to close, it is toxic. Wait for it to dry, then harvest it."
+                local msg = "Oh no it looks like someone pooped and it is fresh. If you get too close, it is toxic. Wait for it to dry, then harvest it."
                 minetest.chat_send_player(obj:get_player_name(), msg)
             end
         end
@@ -43,11 +43,19 @@ minetest.register_abm({
 
 minetest.register_on_item_eat(function(hp_change, replace_with_item, itemstack, user, pointed_thing)
     local name = user:get_player_name()
-    minetest.chat_send_player(name, "In around 30 seconds you will need to poop.")
+    local msg = "In around 30 seconds you will need to poop. In the meantime, please read this poem ... "
+    local poem = [[
+        Poop, destruction, diahreah, North and South Korea,
+        BOOM BOOM, POOP POOP,
+        murder, violent constipation, bathroom time frustrations,
+        BOOM BOOM, POOP POOP
+    ]]
+    minetest.chat_send_player(name, msg)
+    minetest.chat_send_player(name, poem)
     minetest.after(30, function()
         local pos = user:get_pos()
         local dir = user:get_look_dir()
-        local poop_pos = vector.offset(pos, -dir.x*2,0,-dir.z*2)
+        local poop_pos = vector.offset(pos, -dir.x*1.4,0,-dir.z*1.4)
         minetest.set_node(poop_pos, {name="poop:poop"})
         local meta = minetest.get_meta(poop_pos)
         meta:set_string("infotext", name.."'s Poop")
