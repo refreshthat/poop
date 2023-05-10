@@ -13,7 +13,15 @@ minetest.register_node("poop:poop", {
 minetest.register_node("poop:poop_dried", {
     description = "Dried Poop",
     tiles = { "poop_poop_dried.png" },
-    groups = { oddly_breakable_by_hand = 1 }
+    groups = { oddly_breakable_by_hand = 1 },
+    on_use = function(itemstack, user, pointed_thing)
+        if pointed_thing.type == "node" then
+            local pos = pointed_thing.under
+            local node = minetest.get_node(pos)
+            bonemeal:on_use(pos, 5, node)
+            return ItemStack("")
+        end
+    end
 })
 
 minetest.register_abm({
